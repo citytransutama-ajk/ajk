@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Keuangan Mandiri Cloud</title>
+    <title>Keuangan Ajk</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -32,7 +33,7 @@
                 <i class="fas fa-wallet text-2xl text-white"></i>
             </div>
             <h2 id="auth-title" class="text-2xl font-black text-gray-800">Selamat Datang</h2>
-            <p id="auth-subtitle" class="text-xs text-gray-400 mt-1">Silakan masuk ke akun cloud keuangan Anda</p>
+            <p id="auth-subtitle" class="text-xs text-gray-400 mt-1">Silakan masuk ke akun keuangan Anda</p>
         </div>
 
         <form id="auth-form" class="space-y-4">
@@ -166,7 +167,7 @@
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Keterangan</label>
-                            <input type="text" id="description" placeholder="Beli ATK, Tambah Modal, dll" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                            <input type="text" id="description" placeholder="Beli ATK, Tambah Dana, dll" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
                         </div>
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm transition-all">Simpan Transaksi</button>
                     </form>
@@ -177,7 +178,7 @@
         <div id="page-history" class="flex-1 flex flex-col overflow-y-auto pb-24 hidden">
             <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10">
                 <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Cloud</h1>
+                    <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Transaksi</h1>
                     <button id="clear-btn" type="button" class="text-xs text-red-500 hover:underline font-semibold">Hapus Semua</button>
                 </div>
                 <div class="flex space-x-2 overflow-x-auto pb-1">
@@ -214,7 +215,7 @@
     </div>
 
     <div id="clear-all-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"><div class="bg-red-600 p-5 text-white text-center"><i class="fas fa-trash-alt text-4xl mb-2"></i><h3 class="text-lg font-bold">Kosongkan Semua Riwayat Cloud?</h3></div><div class="p-5 text-center space-y-2"><p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server cloud Firebase Anda secara permanen.</p></div><div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3"><button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button><button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button></div></div>
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"><div class="bg-red-600 p-5 text-white text-center"><i class="fas fa-trash-alt text-4xl mb-2"></i><h3 class="text-lg font-bold">Kosongkan Semua Riwayat?</h3></div><div class="p-5 text-center space-y-2"><p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server Anda secara permanen.</p></div><div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3"><button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button><button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button></div></div>
     </div>
 
     <script type="module">
@@ -248,7 +249,7 @@
         // Kategori Mapping
         const categoriesMapping = {
             kas: {
-                pemasukan: ['Droping', 'Tarik Tunai Bank', 'Pinjaman Masuk', 'Lainnya'],
+                pemasukan: ['Droping', 'Tarik Tunai', 'Pinjaman Masuk', 'Lainnya'],
                 pengeluaran: ['Uang jalan', 'Bayar Hutang', 'Lainnya']
             },
             operasional: {
@@ -353,12 +354,12 @@
             isLoginState = !isLoginState;
             if(isLoginState) {
                 authTitle.textContent = "Selamat Datang";
-                authSubtitle.textContent = "Silakan masuk ke akun cloud keuangan Anda";
+                authSubtitle.textContent = "Silakan masuk ke akun keuangan Anda";
                 btnAuthSubmit.textContent = "Masuk Aplikasi";
                 btnToggleAuth.textContent = "Belum punya akun? Daftar Sekarang";
             } else {
                 authTitle.textContent = "Daftar Akun Baru";
-                authSubtitle.textContent = "Buat akun untuk menyimpan pembukuan di Cloud secara aman";
+                authSubtitle.textContent = "Buat akun untuk menyimpan pembukuan keuangan";
                 btnAuthSubmit.textContent = "Buat Akun Gratis";
                 btnToggleAuth.textContent = "Sudah punya akun? Masuk di sini";
             }
