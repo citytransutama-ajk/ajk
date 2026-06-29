@@ -163,7 +163,7 @@
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Nominal (Rp)</label>
-                            <input type="text" id="nominalInput" placeholder="Masukkan nominal..." class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                            <input type="number" id="amount" placeholder="Contoh: 50000" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Keterangan</label>
@@ -612,22 +612,6 @@
 
         dateInput.value = new Date().toISOString().split('T')[0];
         updateCategoryOptions();
-        const inputNominal = document.getElementById('nominalInput');
-
-    inputNominal.addEventListener('input', function (e) {
-    // 1. Ambil nilai input dan hapus semua karakter selain angka
-    let value = e.target.value.replace(/\D/g, '');
-    
-    // 2. Format angka menjadi pemisah ribuan menggunakan regex
-    let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    
-    // 3. Masukkan kembali nilai yang sudah diformat ke dalam input
-    e.target.value = formattedValue;
-    });
-
-    // Cara mengambil nilai angka asli (tanpa titik) saat form di-submit
-let nominalBersih = inputNominal.value.replace(/\./g, ''); 
-console.log(Number(nominalBersih)); // Hasil: 75000000
     </script>
 </body>
 </html>
