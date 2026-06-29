@@ -163,7 +163,7 @@
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Nominal (Rp)</label>
-                            <input type="number" id="amount" placeholder="Contoh: 50000" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                            <input type="text" id="amount" placeholder="Contoh: 50.000" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 mb-1">Keterangan</label>
@@ -308,6 +308,13 @@
         const clearBtn = document.getElementById('clear-btn');
         const btnClearCancel = document.getElementById('btn-clear-cancel');
         const btnClearConfirm = document.getElementById('btn-clear-confirm');
+
+        // Format otomatis dengan separator titik saat input nominal berjalan
+        const amountInput = document.getElementById('amount');
+        amountInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/[^0-9]/g, '');
+            this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
+        });
 
         // Expose trigger globally for dynamically generated HTML elements
         window.triggerDeleteRequest = function(id) {
@@ -484,13 +491,14 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            const rawAmount = document.getElementById('amount').value.replace(/\./g, '');
             temporaryData = {
                 userId: currentUserId, 
                 mainCategory: getMainCategoryValue(),
                 type: typeSelect.value,
                 date: dateInput.value,
                 category: categorySelect.value,
-                amount: parseInt(document.getElementById('amount').value) || 0,
+                amount: parseInt(rawAmount) || 0,
                 description: document.getElementById('description').value,
                 createdAt: new Date().toISOString()
             };
