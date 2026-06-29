@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aplikasi Keuangan Mandiri Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -17,9 +17,14 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        /* Mengatasi masalah tinggi layar dinamis di mobile Chrome */
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased max-w-md mx-auto min-h-screen shadow-lg flex flex-col justify-between relative overflow-hidden">
+<body class="bg-gray-100 font-sans antialiased max-w-md mx-auto shadow-lg flex flex-col justify-between relative overflow-hidden">
 
     <div id="page-auth" class="flex-1 flex flex-col justify-center p-6 bg-white z-50">
         <div class="text-center mb-8">
@@ -47,7 +52,7 @@
         </div>
     </div>
 
-    <div id="main-app" class="flex-1 flex flex-col hidden overflow-hidden relative">
+    <div id="main-app" class="flex-1 flex flex-col hidden overflow-hidden relative w-full">
         
         <div id="page-dashboard" class="flex-1 flex flex-col overflow-y-auto pb-24">
             <header class="spectrum-bg text-white p-6 rounded-b-3xl shadow-lg relative overflow-hidden">
@@ -193,7 +198,7 @@
             </main>
         </div>
 
-        <footer class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-around items-center z-20">
+        <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 p-3 flex justify-around items-center z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
             <button id="nav-dashboard" type="button" class="flex flex-col items-center text-blue-600 w-1/3"><i class="fas fa-chart-pie text-xl"></i><span class="text-[11px] font-bold mt-1">Dashboard</span></button>
             <button id="nav-home" type="button" class="flex flex-col items-center text-gray-400 w-1/3"><i class="fas fa-edit text-xl"></i><span class="text-[11px] font-medium mt-1">Catat</span></button>
             <button id="nav-history" type="button" class="flex flex-col items-center text-gray-400 w-1/3"><i class="fas fa-list-ul text-xl"></i><span class="text-[11px] font-medium mt-1">Riwayat</span></button>
@@ -217,9 +222,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==========================================
-        // MASUKKAN KONFIGURASI FIREBASE ANDA DI SINI
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyAnISyhslzBd0kR6v0b0wZfog9XY4szHiI",
             authDomain: "dompet-mandiri-9856b.firebaseapp.com",
@@ -239,3 +241,376 @@
         // State Global Aplikasi
         let currentUserId = null;
         let transactions = [];
+        let temporaryData = null;
+        let transactionIdToDelete = null;
+        let isLoginState = true;
+
+        // Kategori Mapping
+        const categoriesMapping = {
+            kas: {
+                pemasukan: ['Droping', 'Tarik Tunai Bank', 'Pinjaman Masuk', 'Lainnya'],
+                pengeluaran: ['Uang jalan', 'Bayar Hutang', 'Lainnya']
+            },
+            operasional: {
+                pemasukan: ['Droping', 'Pendapatan Jasa', 'Lainnya'],
+                pengeluaran: ['Service', 'Transport', 'Belanja ATK/Bahan', 'Tagihan & Sewa', 'Lainnya']
+            }
+        };
+
+        // DOM Elemen Auth
+        const pageAuth = document.getElementById('page-auth');
+        const mainApp = document.getElementById('main-app');
+        const authForm = document.getElementById('auth-form');
+        const authEmailInput = document.getElementById('auth-email');
+        const authPasswordInput = document.getElementById('auth-password');
+        const btnAuthSubmit = document.getElementById('btn-auth-submit');
+        const btnToggleAuth = document.getElementById('btn-toggle-auth');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const btnLogout = document.getElementById('btn-logout');
+        const userDisplayEmail = document.getElementById('user-display-email');
+
+        // DOM Elemen Aplikasi Utama
+        const pageDashboard = document.getElementById('page-dashboard');
+        const pageHome = document.getElementById('page-home');
+        const pageHistory = document.getElementById('page-history');
+        const navDashboard = document.getElementById('nav-dashboard');
+        const navHome = document.getElementById('nav-home');
+        const navHistory = document.getElementById('nav-history');
+        const typeSelect = document.getElementById('type');
+        const categorySelect = document.getElementById('category');
+        const dateInput = document.getElementById('date');
+        const form = document.getElementById('transaction-form');
+        const listContainer = document.getElementById('transaction-list');
+        const filterMain = document.getElementById('filter-main');
+        const filterType = document.getElementById('filter-type');
+
+        // Modals
+        const previewModal = document.getElementById('preview-modal');
+        const previewBadge = document.getElementById('preview-badge');
+        const previewAmount = document.getElementById('preview-amount');
+        const previewMainCat = document.getElementById('preview-main-cat');
+        const previewDate = document.getElementById('preview-date');
+        const previewCategory = document.getElementById('preview-category');
+        const previewDescription = document.getElementById('preview-description');
+        const btnCancel = document.getElementById('btn-cancel');
+        const btnConfirm = document.getElementById('btn-confirm');
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteAmount = document.getElementById('delete-amount');
+        const deleteDescription = document.getElementById('delete-description');
+        const deleteMainCat = document.getElementById('delete-main-cat');
+        const deleteCategory = document.getElementById('delete-category');
+        const deleteBadge = document.getElementById('delete-badge');
+        const btnDeleteCancel = document.getElementById('btn-delete-cancel');
+        const btnDeleteConfirm = document.getElementById('btn-delete-confirm');
+        const clearAllModal = document.getElementById('clear-all-modal');
+        const clearBtn = document.getElementById('clear-btn');
+        const btnClearCancel = document.getElementById('btn-clear-cancel');
+        const btnClearConfirm = document.getElementById('btn-clear-confirm');
+
+        // Expose trigger globally for dynamically generated HTML elements
+        window.triggerDeleteRequest = function(id) {
+            const targetData = transactions.find(t => t.id === id);
+            if (!targetData) return;
+            transactionIdToDelete = id;
+            const isIncome = targetData.type === 'pemasukan';
+            deleteAmount.textContent = (isIncome ? '+ ' : '- ') + formatRupiah(targetData.amount);
+            deleteBadge.textContent = isIncome ? 'Pemasukan' : 'Pengeluaran';
+            deleteBadge.className = `text-xs px-2.5 py-1 rounded-full font-bold ${isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            deleteDescription.textContent = targetData.description;
+            deleteMainCat.textContent = targetData.mainCategory;
+            deleteCategory.textContent = targetData.category;
+            deleteModal.classList.remove('hidden');
+        };
+
+        window.switchPage = function(target) {
+            pageDashboard.classList.add('hidden');
+            pageHome.classList.add('hidden');
+            pageHistory.classList.add('hidden');
+            [navDashboard, navHome, navHistory].forEach(btn => {
+                btn.classList.replace('text-blue-600', 'text-gray-400');
+                btn.querySelector('span').className = "text-[11px] font-medium mt-1";
+            });
+            if (target === 'dashboard') {
+                pageDashboard.classList.remove('hidden');
+                navDashboard.classList.replace('text-gray-400', 'text-blue-600');
+                navDashboard.querySelector('span').className = "text-[11px] font-bold mt-1";
+                updateDashboard();
+            } else if (target === 'home') {
+                pageHome.classList.remove('hidden');
+                navHome.classList.replace('text-gray-400', 'text-blue-600');
+                navHome.querySelector('span').className = "text-[11px] font-bold mt-1";
+            } else if (target === 'history') {
+                pageHistory.classList.remove('hidden');
+                navHistory.classList.replace('text-gray-400', 'text-blue-600');
+                navHistory.querySelector('span').className = "text-[11px] font-bold mt-1";
+                renderTransactions();
+            }
+        };
+
+        // --- MANAJEMEN OTENTIKASI USER ---
+        btnToggleAuth.addEventListener('click', () => {
+            isLoginState = !isLoginState;
+            if(isLoginState) {
+                authTitle.textContent = "Selamat Datang";
+                authSubtitle.textContent = "Silakan masuk ke akun cloud keuangan Anda";
+                btnAuthSubmit.textContent = "Masuk Aplikasi";
+                btnToggleAuth.textContent = "Belum punya akun? Daftar Sekarang";
+            } else {
+                authTitle.textContent = "Daftar Akun Baru";
+                authSubtitle.textContent = "Buat akun untuk menyimpan pembukuan di Cloud secara aman";
+                btnAuthSubmit.textContent = "Buat Akun Gratis";
+                btnToggleAuth.textContent = "Sudah punya akun? Masuk di sini";
+            }
+        });
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
+            btnAuthSubmit.disabled = true;
+            btnAuthSubmit.textContent = "Memproses...";
+
+            try {
+                if (isLoginState) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("Akun berhasil dibuat! Otomatis masuk.");
+                }
+                authForm.reset();
+            } catch (error) {
+                alert("Gagal: " + error.message);
+            } finally {
+                btnAuthSubmit.disabled = false;
+                btnAuthSubmit.textContent = isLoginState ? "Masuk Aplikasi" : "Buat Akun Gratis";
+            }
+        });
+
+        btnLogout.addEventListener('click', () => {
+            if(confirm("Apakah Anda ingin keluar dari aplikasi?")) signOut(auth);
+        });
+
+        // Deteksi Status Login Realtime
+        let unsubscribeFirestore = null;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userDisplayEmail.textContent = user.email;
+                pageAuth.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                switchPage('dashboard');
+                listenToTransactionsCloud(); 
+            } else {
+                currentUserId = null;
+                if(unsubscribeFirestore) unsubscribeFirestore();
+                pageAuth.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+                transactions = [];
+            }
+        });
+
+        // --- REALTIME FIRESTORE SYNC ---
+        function listenToTransactionsCloud() {
+            if(!currentUserId) return;
+            const q = query(collection(db, "transactions"), where("userId", "==", currentUserId));
+            
+            unsubscribeFirestore = onSnapshot(q, (snapshot) => {
+                transactions = [];
+                snapshot.forEach((doc) => {
+                    transactions.push({ id: doc.id, ...doc.data() });
+                });
+                updateDashboard();
+                renderTransactions();
+            }, (error) => {
+                console.error("Firestore error:", error);
+            });
+        }
+
+        // --- FUNGSI UTAMA APLIKASI ---
+        function getMainCategoryValue() {
+            const checkedRadio = document.querySelector('input[name="main_category"]:checked');
+            return checkedRadio ? checkedRadio.value : 'kas';
+        }
+
+        navDashboard.addEventListener('click', () => switchPage('dashboard'));
+        navHome.addEventListener('click', () => switchPage('home'));
+        navHistory.addEventListener('click', () => switchPage('history'));
+
+        function updateCategoryOptions() {
+            const mainCat = getMainCategoryValue();
+            const flowType = typeSelect.value;
+            categorySelect.innerHTML = '';
+            if(categoriesMapping[mainCat] && categoriesMapping[mainCat][flowType]) {
+                categoriesMapping[mainCat][flowType].forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat; option.textContent = cat;
+                    categorySelect.appendChild(option);
+                });
+            }
+        }
+        document.querySelectorAll('input[name="main_category"]').forEach(r => r.addEventListener('change', updateCategoryOptions));
+        typeSelect.addEventListener('change', updateCategoryOptions);
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+        function formatDateDisplay(dateString) {
+            if(!dateString) return "-";
+            return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function updateDashboard() {
+            let masukGlobal = 0, keluarGlobal = 0, masukKas = 0, keluarKas = 0, masukOps = 0, keluarOps = 0;
+            transactions.forEach(t => {
+                const isIncome = t.type === 'pemasukan';
+                const value = parseInt(t.amount) || 0;
+                if (isIncome) masukGlobal += value; else keluarGlobal += value;
+                if (t.mainCategory === 'kas') {
+                    if (isIncome) masukKas += value; else keluarKas += value;
+                } else if (t.mainCategory === 'operasional') {
+                    if (isIncome) masukOps += value; else keluarOps += value;
+                }
+            });
+            document.getElementById('total-saldo').textContent = formatRupiah(masukGlobal - keluarGlobal);
+            document.getElementById('saldo-kas').textContent = formatRupiah(masukKas - keluarKas);
+            document.getElementById('masuk-kas').textContent = formatRupiah(masukKas);
+            document.getElementById('keluar-kas').textContent = formatRupiah(keluarKas);
+            document.getElementById('saldo-operasional').textContent = formatRupiah(masukOps - keluarOps);
+            document.getElementById('masuk-operasional').textContent = formatRupiah(masukOps);
+            document.getElementById('keluar-operasional').textContent = formatRupiah(keluarOps);
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            temporaryData = {
+                userId: currentUserId, 
+                mainCategory: getMainCategoryValue(),
+                type: typeSelect.value,
+                date: dateInput.value,
+                category: categorySelect.value,
+                amount: parseInt(document.getElementById('amount').value) || 0,
+                description: document.getElementById('description').value,
+                createdAt: new Date().toISOString()
+            };
+            const isIncome = temporaryData.type === 'pemasukan';
+            previewAmount.textContent = (isIncome ? '+ ' : '- ') + formatRupiah(temporaryData.amount);
+            previewAmount.className = `text-2xl font-extrabold mt-1 ${isIncome ? 'text-green-600' : 'text-red-600'}`;
+            previewBadge.textContent = isIncome ? 'Pemasukan' : 'Pengeluaran';
+            previewBadge.className = `text-xs px-2.5 py-1 rounded-full font-bold ${isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+            previewMainCat.textContent = temporaryData.mainCategory;
+            previewDate.textContent = formatDateDisplay(temporaryData.date);
+            previewCategory.textContent = temporaryData.category;
+            previewDescription.textContent = temporaryData.description;
+            previewModal.classList.remove('hidden');
+        });
+
+        btnCancel.addEventListener('click', () => { previewModal.classList.add('hidden'); temporaryData = null; });
+
+        btnConfirm.addEventListener('click', async () => {
+            if (temporaryData && currentUserId) {
+                try {
+                    await addDoc(collection(db, "transactions"), temporaryData);
+                    form.reset();
+                    document.querySelector('input[name="main_category"][value="kas"]').checked = true;
+                    dateInput.value = new Date().toISOString().split('T')[0];
+                    updateCategoryOptions();
+                    previewModal.classList.add('hidden');
+                    temporaryData = null;
+                    switchPage('history');
+                } catch (e) {
+                    alert("Gagal menyimpan ke cloud: " + e.message);
+                }
+            }
+        });
+
+        btnDeleteCancel.addEventListener('click', () => { deleteModal.classList.add('hidden'); transactionIdToDelete = null; });
+
+        btnDeleteConfirm.addEventListener('click', async () => {
+            if (transactionIdToDelete) {
+                try {
+                    await deleteDoc(doc(db, "transactions", transactionIdToDelete));
+                    deleteModal.classList.add('hidden');
+                    transactionIdToDelete = null;
+                } catch (e) {
+                    alert("Gagal menghapus: " + e.message);
+                }
+            }
+        });
+
+        clearBtn.addEventListener('click', () => { clearAllModal.classList.remove('hidden'); });
+        btnClearCancel.addEventListener('click', () => { clearAllModal.classList.add('hidden'); });
+        btnClearConfirm.addEventListener('click', async () => {
+            if(!currentUserId) return;
+            try {
+                const q = query(collection(db, "transactions"), where("userId", "==", currentUserId));
+                const querySnapshot = await getDocs(q);
+                const batch = writeBatch(db);
+                querySnapshot.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                await batch.commit();
+                clearAllModal.classList.add('hidden');
+            } catch (e) {
+                alert("Gagal mengosongkan data cloud: " + e.message);
+            }
+        });
+
+        filterMain.addEventListener('change', renderTransactions);
+        filterType.addEventListener('change', renderTransactions);
+
+        function renderTransactions() {
+            listContainer.innerHTML = '';
+            const selectedMainFilter = filterMain.value;
+            const selectedTypeFilter = filterType.value;
+
+            let filteredTransactions = transactions.filter(t => {
+                const matchMain = (selectedMainFilter === 'all') || (t.mainCategory === selectedMainFilter);
+                const matchType = (selectedTypeFilter === 'all') || (t.type === selectedTypeFilter);
+                return matchMain && matchType;
+            });
+
+            if (filteredTransactions.length === 0) {
+                listContainer.innerHTML = `<p class="text-center text-gray-400 text-sm py-8">Tidak ada data transaksi di akun cloud ini.</p>`;
+                return;
+            }
+
+            const sorted = filteredTransactions.sort((a, b) => {
+                const timeA = a.createdAt || "";
+                const timeB = b.createdAt || "";
+                return timeB.localeCompare(timeA);
+            });
+
+            sorted.forEach((t) => {
+                const item = document.createElement('div');
+                item.className = "bg-white p-3.5 rounded-xl shadow-sm flex justify-between items-center border border-gray-100";
+                const isIncome = t.type === 'pemasukan';
+                const icon = isIncome ? 'fa-arrow-down-long text-green-500' : 'fa-arrow-up-long text-red-500';
+                const isKas = t.mainCategory === 'kas';
+                const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.mainCategory}</span>`;
+
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3 w-7/12">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs flex-shrink-0"><i class="fas ${icon}"></i></div>
+                        <div class="truncate">
+                            <div class="flex items-center space-x-1.5 mb-0.5">
+                                <p class="text-sm font-bold text-gray-800 truncate">${t.description}</p>
+                                ${mainBadge}
+                            </div>
+                            <p class="text-[11px] text-gray-400 font-medium">${t.category} • <span class="text-gray-500">${formatDateDisplay(t.date)}</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 w-5/12 justify-end">
+                        <p class="text-sm font-bold ${isIncome ? 'text-green-600' : 'text-red-600'} text-right">${isIncome ? '+' : '-'} ${formatRupiah(t.amount)}</p>
+                        <button type="button" onclick="triggerDeleteRequest('${t.id}')" class="text-red-500 hover:text-red-700 p-1 transition-colors"><i class="fas fa-trash-alt text-sm"></i></button>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        dateInput.value = new Date().toISOString().split('T')[0];
+        updateCategoryOptions();
+    </script>
+</body>
+</html>
