@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Ajk</title>
+    <title>finance-ajk</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -18,15 +18,22 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        /* Mengatasi masalah tinggi layar dinamis di mobile Chrome */
         body {
             min-height: 100vh;
             min-height: 100dvh;
         }
+        /* Custom styling untuk custom radio selector yang modern */
+        .type-radio:checked + div {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1), 0 2px 4px -1px rgba(59, 130, 246, 0.06);
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased max-w-md mx-auto shadow-lg flex flex-col justify-between relative overflow-hidden">
+<body class="bg-gray-50 font-sans antialiased max-w-md mx-auto shadow-2xl flex flex-col justify-between relative overflow-hidden min-h-screen">
 
+    <!-- HALAMAN AUTH -->
     <div id="page-auth" class="flex-1 flex flex-col justify-center p-6 bg-white z-50">
         <div class="text-center mb-8">
             <div class="w-16 h-16 spectrum-bg rounded-2xl mx-auto flex items-center justify-center shadow-lg mb-4">
@@ -38,14 +45,14 @@
 
         <form id="auth-form" class="space-y-4">
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">Alamat Email</label>
-                <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Alamat Email</label>
+                <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-all">
             </div>
             <div>
-                <label class="block text-xs font-semibold text-gray-500 mb-1">Kata Sandi</label>
-                <input type="password" id="auth-password" required placeholder="Minimal 6 karakter" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Kata Sandi</label>
+                <input type="password" id="auth-password" required placeholder="Minimal 6 karakter" class="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-all">
             </div>
-            <button type="submit" id="btn-auth-submit" class="w-full spectrum-bg text-white font-bold py-3 rounded-xl text-sm shadow-md transition-all">Masuk Aplikasi</button>
+            <button type="submit" id="btn-auth-submit" class="w-full spectrum-bg text-white font-bold py-3.5 rounded-xl text-sm shadow-md hover:opacity-90 transition-all mt-2">Masuk Aplikasi</button>
         </form>
 
         <div class="text-center mt-6">
@@ -53,8 +60,10 @@
         </div>
     </div>
 
+    <!-- MAIN APP WRAPPER -->
     <div id="main-app" class="flex-1 flex flex-col hidden overflow-hidden relative w-full">
         
+        <!-- DASHBOARD PAGE -->
         <div id="page-dashboard" class="flex-1 flex flex-col overflow-y-auto pb-24">
             <header class="spectrum-bg text-white p-6 rounded-b-3xl shadow-lg relative overflow-hidden">
                 <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -76,6 +85,7 @@
             </header>
 
             <main class="p-4 space-y-5">
+                <!-- Kas Jalan Card -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                         <div class="flex items-center space-x-2">
@@ -86,16 +96,17 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3 pt-1">
                         <div class="bg-green-50/50 p-2.5 rounded-xl border border-green-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pemasukan Kas Jalan</p>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pemasukan Kas</p>
                             <p id="masuk-kas" class="text-xs font-bold text-green-600 mt-0.5">Rp 0</p>
                         </div>
                         <div class="bg-red-50/50 p-2.5 rounded-xl border border-red-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pengeluaran Kas Jalan</p>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pengeluaran Kas</p>
                             <p id="keluar-kas" class="text-xs font-bold text-red-600 mt-0.5">Rp 0</p>
                         </div>
                     </div>
                 </div>
 
+                <!-- Operasional Card -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                         <div class="flex items-center space-x-2">
@@ -116,72 +127,112 @@
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-2xl text-white shadow-sm flex justify-between items-center">
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-2xl text-white shadow-md flex justify-between items-center">
                     <div>
                         <h4 class="text-sm font-bold">Butuh Catat Pengeluaran?</h4>
                         <p class="text-[11px] text-gray-400 mt-0.5">Kelola arus keuanganmu sekarang juga.</p>
                     </div>
-                    <button type="button" onclick="switchPage('home')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-4 py-2 rounded-xl shadow transition-all">Mulai Catat</button>
+                    <button type="button" onclick="switchPage('home')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow transition-all">Mulai Catat</button>
                 </div>
             </main>
         </div>
 
+        <!-- MODERN CATAT TRANSAKSI PAGE (FIXED & IMPROVED UI) -->
         <div id="page-home" class="flex-1 flex flex-col overflow-y-auto pb-24 hidden">
-            <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10">
-                <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-plus-circle mr-2 text-blue-600"></i>Catat Transaksi</h1>
+            <header class="bg-white px-5 py-4 border-b border-gray-100 sticky top-0 z-10 flex items-center justify-between">
+                <h1 class="text-lg font-extrabold text-gray-800 flex items-center">
+                    <span class="w-2.5 h-6 bg-blue-600 rounded-full mr-2.5 d-inline-block"></span>Catat Transaksi
+                </h1>
+                <span class="text-[11px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full uppercase tracking-wider">Formulir</span>
             </header>
+            
             <main class="p-4 flex-1">
-                <div class="bg-white p-5 rounded-2xl shadow-sm">
-                    <form id="transaction-form" class="space-y-3">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <form id="transaction-form" class="space-y-4">
+                        
+                        <!-- 1. Tipe Akun (Custom Selector Modern) -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Tipe Akun/Transaksi</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="flex items-center justify-center p-2.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer text-sm font-medium text-gray-700">
-                                    <input type="radio" name="main_category" value="kas" checked class="mr-2 accent-blue-600"> Kas Jalan
+                            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Tipe Akun</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="relative block cursor-pointer">
+                                    <input type="radio" name="main_category" value="kas" checked class="type-radio hidden">
+                                    <div class="flex items-center justify-center p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 transition-all text-center">
+                                        <i class="fas fa-vault mr-2 text-xs"></i> Kas Jalan
+                                    </div>
                                 </label>
-                                <label class="flex items-center justify-center p-2.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer text-sm font-medium text-gray-700">
-                                    <input type="radio" name="main_category" value="operasional" class="mr-2 accent-blue-600"> Operasional
+                                <label class="relative block cursor-pointer">
+                                    <input type="radio" name="main_category" value="operasional" class="type-radio hidden">
+                                    <div class="flex items-center justify-center p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 transition-all text-center">
+                                        <i class="fas fa-briefcase mr-2 text-xs"></i> Operasional
+                                    </div>
                                 </label>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
+
+                        <!-- 2. Jenis Aliran & Tanggal -->
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs text-gray-500 mb-1">Jenis Transaksi</label>
-                                <select id="type" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
-                                    <option value="pemasukan">Pemasukan (+)</option>
-                                    <option value="pengeluaran">Pengeluaran (-)</option>
+                                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jenis Arus</label>
+                                <div class="relative">
+                                    <select id="type" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 appearance-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all pl-3 pr-8">
+                                        <option value="pemasukan">Pemasukan (+)</option>
+                                        <option value="pengeluaran">Pengeluaran (-)</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal</label>
+                                <input type="date" id="date" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                            </div>
+                        </div>
+
+                        <!-- 3. Kategori Detail -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Kategori Detail</label>
+                            <div class="relative">
+                                <select id="category" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 appearance-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all pl-3 pr-8">
+                                    <!-- Diisi via javascript -->
                                 </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                Amin</div>
                             </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
-                                <input type="date" id="date" required class="w-full p-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+
+                        <!-- 4. Nominal (Input Besar Ala Fintech) -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Nominal Transaksi (Rp)</label>
+                            <div class="relative flex items-center">
+                                <span class="absolute left-4 text-gray-400 font-bold text-base">Rp</span>
+                                <input type="text" id="amount" placeholder="0" required class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-base font-extrabold text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
                             </div>
                         </div>
+
+                        <!-- 5. Keterangan -->
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Kategori Detail</label>
-                            <select id="category" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500"></select>
+                            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Keterangan Catatan</label>
+                            <input type="text" id="description" placeholder="Beli ATK, Tambah Dana, dll" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
                         </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Nominal (Rp)</label>
-                            <input type="text" id="amount" placeholder="Contoh: 50.000" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1">Keterangan</label>
-                            <input type="text" id="description" placeholder="Beli ATK, Tambah Dana, dll" required class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500">
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm transition-all">Simpan Transaksi</button>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition-all mt-2 flex items-center justify-center space-x-2">
+                            <i class="fas fa-check-circle"></i> <span>Simpan & Tinjau</span>
+                        </button>
                     </form>
                 </div>
             </main>
         </div>
 
+        <!-- HISTORY PAGE -->
         <div id="page-history" class="flex-1 flex flex-col overflow-y-auto pb-24 hidden">
             <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10 space-y-3">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Transaksi</h1>
                     <button id="clear-btn" type="button" class="text-xs text-red-500 hover:underline font-semibold">Hapus Semua</button>
                 </div>
-                <!-- Filter baris pertama: Tipe Akun & Aliran -->
+                <!-- Filter baris pertama -->
                 <div class="flex space-x-2">
                     <select id="filter-main" class="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-600 focus:outline-none focus:border-blue-500">
                         <option value="all">Semua Tipe Akun</option>
@@ -194,7 +245,7 @@
                         <option value="pengeluaran">Pengeluaran (-)</option>
                     </select>
                 </div>
-                <!-- Filter baris kedua: Berdasarkan Rentang Tanggal -->
+                <!-- Filter rentang tanggal -->
                 <div class="flex space-x-2 items-center bg-gray-50 p-2 rounded-xl border border-gray-200">
                     <div class="flex-1 flex items-center space-x-1">
                         <span class="text-[10px] text-gray-400 font-bold uppercase">Dari:</span>
@@ -212,6 +263,7 @@
             </main>
         </div>
 
+        <!-- FIXED FOOTER NAVIGATION -->
         <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-200 p-3 flex justify-around items-center z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
             <button id="nav-dashboard" type="button" class="flex flex-col items-center text-blue-600 w-1/3"><i class="fas fa-chart-pie text-xl"></i><span class="text-[11px] font-bold mt-1">Dashboard</span></button>
             <button id="nav-home" type="button" class="flex flex-col items-center text-gray-400 w-1/3"><i class="fas fa-edit text-xl"></i><span class="text-[11px] font-medium mt-1">Catat</span></button>
@@ -219,18 +271,84 @@
         </footer>
     </div>
 
+    <!-- MODAL PREVIEW -->
     <div id="preview-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"><div class="bg-gray-50 px-5 py-4 border-b border-gray-100 flex items-center justify-between"><h3 class="text-md font-bold text-gray-800"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau</h3><span id="preview-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span></div><div class="p-5 space-y-4"><div class="text-center py-2"><p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p><p id="preview-amount" class="text-2xl font-extrabold mt-1"></p></div><hr class="border-gray-100"><div class="grid grid-cols-3 gap-2 text-sm"><p class="text-gray-400">Akun</p><p id="preview-main-cat" class="col-span-2 text-gray-800 font-bold text-right uppercase text-xs text-blue-600"></p><p class="text-gray-400">Tanggal</p><p id="preview-date" class="col-span-2 text-gray-800 font-medium text-right"></p><p class="text-gray-400">Kategori</p><p id="preview-category" class="col-span-2 text-gray-800 font-medium text-right"></p><p class="text-gray-400">Keterangan</p><p id="preview-description" class="col-span-2 text-gray-800 font-medium text-right truncate"></p></div></div><div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3"><button id="btn-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button><button id="btn-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-sm">Ya, Simpan</button></div></div>
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gray-50 px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="text-md font-bold text-gray-800"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau</h3>
+                <span id="preview-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="text-center py-2">
+                    <p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p>
+                    <p id="preview-amount" class="text-2xl font-extrabold mt-1"></p>
+                </div>
+                <hr class="border-gray-100">
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                    <p class="text-gray-400">Akun</p>
+                    <p id="preview-main-cat" class="col-span-2 text-gray-800 font-bold text-right uppercase text-xs text-blue-600"></p>
+                    <p class="text-gray-400">Tanggal</p>
+                    <p id="preview-date" class="col-span-2 text-gray-800 font-medium text-right"></p>
+                    <p class="text-gray-400">Kategori</p>
+                    <p id="preview-category" class="col-span-2 text-gray-800 font-medium text-right"></p>
+                    <p class="text-gray-400">Keterangan</p>
+                    <p id="preview-description" class="col-span-2 text-gray-800 font-medium text-right truncate"></p>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
+                <button id="btn-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
+                <button id="btn-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-sm">Ya, Simpan</button>
+            </div>
+        </div>
     </div>
 
+    <!-- MODAL DELETE -->
     <div id="delete-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"><div class="bg-red-50 px-5 py-4 border-b border-red-100 flex items-center justify-between"><h3 class="text-md font-bold text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Hapus?</h3><span id="delete-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span></div><div class="p-5 space-y-4"><div class="text-center py-2"><p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p><p id="delete-amount" class="text-2xl font-extrabold mt-1 text-red-600"></p></div><hr class="border-gray-100"><div class="grid grid-cols-3 gap-2 text-sm"><p class="text-gray-400">Ket</p><p id="delete-description" class="col-span-2 text-gray-800 font-bold text-right truncate"></p><p class="text-gray-400">Akun</p><p id="delete-main-cat" class="col-span-2 text-gray-800 font-semibold text-right uppercase text-xs text-blue-600"></p><p class="text-gray-400">Kategori</p><p id="delete-category" class="col-span-2 text-gray-600 font-medium text-right"></p></div></div><div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3"><button id="btn-delete-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button><button id="btn-delete-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Hapus</button></div></div>
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-red-50 px-5 py-4 border-b border-red-100 flex items-center justify-between">
+                <h3 class="text-md font-bold text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Hapus?</h3>
+                <span id="delete-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="text-center py-2">
+                    <p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p>
+                    <p id="delete-amount" class="text-2xl font-extrabold mt-1 text-red-600"></p>
+                </div>
+                <hr class="border-gray-100">
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                    <p class="text-gray-400">Ket</p>
+                    <p id="delete-description" class="col-span-2 text-gray-800 font-bold text-right truncate"></p>
+                    <p class="text-gray-400">Akun</p>
+                    <p id="delete-main-cat" class="col-span-2 text-gray-800 font-semibold text-right uppercase text-xs text-blue-600"></p>
+                    <p class="text-gray-400">Kategori</p>
+                    <p id="delete-category" class="col-span-2 text-gray-600 font-medium text-right"></p>
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
+                <button id="btn-delete-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
+                <button id="btn-delete-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Hapus</button>
+            </div>
+        </div>
     </div>
 
+    <!-- MODAL CLEAR ALL -->
     <div id="clear-all-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"><div class="bg-red-600 p-5 text-white text-center"><i class="fas fa-trash-alt text-4xl mb-2"></i><h3 class="text-lg font-bold">Kosongkan Semua Riwayat?</h3></div><div class="p-5 text-center space-y-2"><p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server Anda secara permanen.</p></div><div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3"><button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button><button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button></div></div>
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-red-600 p-5 text-white text-center">
+                <i class="fas fa-trash-alt text-4xl mb-2"></i>
+                <h3 class="text-lg font-bold">Kosongkan Semua Riwayat?</h3>
+            </div>
+            <div class="p-5 text-center space-y-2">
+                <p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server Anda secara permanen.</p>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
+                <button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
+                <button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button>
+            </div>
+        </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC WITH STABLE FIREBASE EVENTS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -247,19 +365,16 @@
             measurementId: "G-QV9XLFZ7DE"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // State Global Aplikasi
         let currentUserId = null;
         let transactions = [];
         let temporaryData = null;
         let transactionIdToDelete = null;
         let isLoginState = true;
 
-        // Kategori Mapping
         const categoriesMapping = {
             kas: {
                 pemasukan: ['Droping', 'Tarik Tunai', 'Pinjaman Masuk', 'Lainnya'],
@@ -271,7 +386,7 @@
             }
         };
 
-        // DOM Elemen Auth
+        // DOM Elements
         const pageAuth = document.getElementById('page-auth');
         const mainApp = document.getElementById('main-app');
         const authForm = document.getElementById('auth-form');
@@ -284,13 +399,13 @@
         const btnLogout = document.getElementById('btn-logout');
         const userDisplayEmail = document.getElementById('user-display-email');
 
-        // DOM Elemen Aplikasi Utama
         const pageDashboard = document.getElementById('page-dashboard');
         const pageHome = document.getElementById('page-home');
         const pageHistory = document.getElementById('page-history');
         const navDashboard = document.getElementById('nav-dashboard');
         const navHome = document.getElementById('nav-home');
         const navHistory = document.getElementById('nav-history');
+        
         const typeSelect = document.getElementById('type');
         const categorySelect = document.getElementById('category');
         const dateInput = document.getElementById('date');
@@ -299,19 +414,36 @@
         const filterMain = document.getElementById('filter-main');
         const filterType = document.getElementById('filter-type');
         
-        // Elemen Filter Tanggal Tambahan
         const filterStartDate = document.getElementById('filter-start-date');
         const filterEndDate = document.getElementById('filter-end-date');
         const btnResetDateFilter = document.getElementById('btn-reset-date-filter');
 
-        // Format otomatis pemisah ribuan titik pada input nominal
-        const amountInput = document.getElementById('amount');
-        amountInput.addEventListener('input', function(e) {
-            let value = this.value.replace(/[^0-9]/g, '');
-            this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
-        });
+        // Modal elements
+        const previewModal = document.getElementById('preview-modal');
+        const previewAmount = document.getElementById('preview-amount');
+        const previewBadge = document.getElementById('preview-badge');
+        const previewMainCat = document.getElementById('preview-main-cat');
+        const previewDate = document.getElementById('preview-date');
+        const previewCategory = document.getElementById('preview-category');
+        const previewDescription = document.getElementById('preview-description');
+        const btnCancel = document.getElementById('btn-cancel');
+        const btnConfirm = document.getElementById('btn-confirm');
 
-        // Expose trigger globally for dynamically generated HTML elements
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteAmount = document.getElementById('delete-amount');
+        const deleteBadge = document.getElementById('delete-badge');
+        const deleteDescription = document.getElementById('delete-description');
+        const deleteMainCat = document.getElementById('delete-main-cat');
+        const deleteCategory = document.getElementById('delete-category');
+        const btnDeleteCancel = document.getElementById('btn-delete-cancel');
+        const btnDeleteConfirm = document.getElementById('btn-delete-confirm');
+
+        const clearBtn = document.getElementById('clear-btn');
+        const clearAllModal = document.getElementById('clear-all-modal');
+        const btnClearCancel = document.getElementById('btn-clear-cancel');
+        const btnClearConfirm = document.getElementById('btn-clear-confirm');
+
+        // Global functions for dynamic bindings
         window.triggerDeleteRequest = function(id) {
             const targetData = transactions.find(t => t.id === id);
             if (!targetData) return;
@@ -351,7 +483,7 @@
             }
         };
 
-        // --- MANAJEMEN OTENTIKASI USER ---
+        // Auth management
         btnToggleAuth.addEventListener('click', () => {
             isLoginState = !isLoginState;
             if(isLoginState) {
@@ -394,7 +526,6 @@
             if(confirm("Apakah Anda ingin keluar dari aplikasi?")) signOut(auth);
         });
 
-        // Deteksi Status Login Realtime
         let unsubscribeFirestore = null;
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -413,7 +544,6 @@
             }
         });
 
-        // --- REALTIME FIRESTORE SYNC ---
         function listenToTransactionsCloud() {
             if(!currentUserId) return;
             const q = query(collection(db, "transactions"), where("userId", "==", currentUserId));
@@ -430,7 +560,6 @@
             });
         }
 
-        // --- FUNGSI UTAMA APLIKASI ---
         function getMainCategoryValue() {
             const checkedRadio = document.querySelector('input[name="main_category"]:checked');
             return checkedRadio ? checkedRadio.value : 'kas';
@@ -452,6 +581,8 @@
                 });
             }
         }
+        
+        // Listener untuk radio button modern tipe akun & select jenis arus
         document.querySelectorAll('input[name="main_category"]').forEach(r => r.addEventListener('change', updateCategoryOptions));
         typeSelect.addEventListener('change', updateCategoryOptions);
 
@@ -560,7 +691,6 @@
             }
         });
 
-        // Event Listener untuk memicu perubahan filter riwayat
         filterMain.addEventListener('change', renderTransactions);
         filterType.addEventListener('change', renderTransactions);
         filterStartDate.addEventListener('change', renderTransactions);
@@ -582,7 +712,6 @@
                 const matchMain = (selectedMainFilter === 'all') || (t.mainCategory === selectedMainFilter);
                 const matchType = (selectedTypeFilter === 'all') || (t.type === selectedTypeFilter);
                 
-                // Filter tanggal (berdasarkan t.date)
                 let matchDate = true;
                 if (startDate) {
                     matchDate = matchDate && (t.date >= startDate);
@@ -630,7 +759,6 @@
                             <button type="button" onclick="triggerDeleteRequest('${t.id}')" class="text-red-500 hover:text-red-700 p-1 transition-colors"><i class="fas fa-trash-alt text-sm"></i></button>
                         </div>
                     </div>
-                    <!-- Tampilan data ID / Document Key -->
                     <div class="pt-1.5 border-t border-dashed border-gray-100 flex justify-between items-center text-[10px] text-gray-400 font-mono">
                         <span>Doc Key ID: <span class="text-gray-600 font-bold">${t.id}</span></span>
                         <span class="capitalize bg-gray-100 px-1.5 py-0.5 rounded font-sans text-[9px] font-semibold">${t.type}</span>
@@ -640,6 +768,7 @@
             });
         }
 
+        // Initialize state
         dateInput.value = new Date().toISOString().split('T')[0];
         updateCategoryOptions();
     </script>
