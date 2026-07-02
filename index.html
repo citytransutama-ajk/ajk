@@ -41,13 +41,13 @@
                 <i class="fas fa-wallet text-2xl text-white"></i>
             </div>
             <h2 id="auth-title" class="text-2xl font-black text-gray-800">Selamat Datang</h2>
-            <p id="auth-subtitle" class="text-xs text-gray-400 mt-1">Silakan masuk ke akun keuangan Anda</p>
+            <p id="auth-subtitle" class="text-xs text-gray-400 mt-1">Silakan masuk ke akun Anda</p>
         </div>
 
         <form id="auth-form" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Alamat Email</label>
-                <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-all">
+                <input type="email" id="auth-email" required placeholder="nama@mail.com" class="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-all">
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Kata Sandi</label>
@@ -94,11 +94,11 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3 pt-1">
                         <div class="bg-green-50/50 p-2.5 rounded-xl border border-green-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pemasukan Kas</p>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pemasukan Kas Jalan</p>
                             <p id="masuk-kas" class="text-xs font-bold text-green-600 mt-0.5">Rp 0</p>
                         </div>
                         <div class="bg-red-50/50 p-2.5 rounded-xl border border-red-100">
-                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pengeluaran Kas</p>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Pengeluaran Kas Jalan</p>
                             <p id="keluar-kas" class="text-xs font-bold text-red-600 mt-0.5">Rp 0</p>
                         </div>
                     </div>
@@ -126,8 +126,7 @@
 
                 <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-2xl text-white shadow-md flex justify-between items-center">
                     <div>
-                        <h4 class="text-sm font-bold">Butuh Catat Pengeluaran?</h4>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Kelola arus keuanganmu sekarang juga.</p>
+                        <h4 class="text-sm font-bold">Mangga, Dicatet Ayeuna Supados Teu Hilap!.</h4>
                     </div>
                     <button type="button" onclick="switchPage('home')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow transition-all">Mulai Catat</button>
                 </div>
@@ -166,7 +165,7 @@
 
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jenis Arus</label>
+                                <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jenis Transaksi</label>
                                 <div class="relative">
                                     <select id="type" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 appearance-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all pl-3 pr-8">
                                         <option value="pemasukan">Pemasukan (+)</option>
@@ -228,18 +227,18 @@
                         <option value="operasional">Hanya Operasional</option>
                     </select>
                     <select id="filter-type" class="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-600 focus:outline-none focus:border-blue-500">
-                        <option value="all">Semua Aliran</option>
+                        <option value="all">Semua Transaksi</option>
                         <option value="pemasukan">Pemasukan (+)</option>
                         <option value="pengeluaran">Pengeluaran (-)</option>
                     </select>
                 </div>
                 <div class="flex space-x-2 items-center bg-gray-50 p-2 rounded-xl border border-gray-200">
                     <div class="flex-1 flex items-center space-x-1">
-                        <span class="text-[10px] text-gray-400 font-bold uppercase">Dari:</span>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase">Dari tgl:</span>
                         <input type="date" id="filter-start-date" class="w-full bg-transparent text-xs text-gray-700 focus:outline-none">
                     </div>
                     <div class="flex-1 flex items-center space-x-1">
-                        <span class="text-[10px] text-gray-400 font-bold uppercase">Ke:</span>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase">Ke tgl:</span>
                         <input type="date" id="filter-end-date" class="w-full bg-transparent text-xs text-gray-700 focus:outline-none">
                     </div>
                     <button id="btn-reset-date-filter" type="button" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold px-1"><i class="fas fa-undo"></i></button>
@@ -357,7 +356,7 @@
 
         const categoriesMapping = {
             kas: {
-                pemasukan: ['Droping', 'Tarik Tunai', 'Pinjaman Masuk', 'Lainnya'],
+                pemasukan: ['Droping', 'Tarik Tunai', 'Pinjaman', 'Lainnya'],
                 pengeluaran: ['Uang jalan', 'Bayar Hutang', 'Lainnya']
             },
             operasional: {
@@ -481,7 +480,7 @@
             isLoginState = !isLoginState;
             if(isLoginState) {
                 authTitle.textContent = "Selamat Datang";
-                authSubtitle.textContent = "Silakan masuk ke akun keuangan Anda";
+                authSubtitle.textContent = "Silakan masuk ke akun Anda";
                 btnAuthSubmit.textContent = "Masuk Aplikasi";
                 btnToggleAuth.textContent = "Belum punya akun? Daftar Sekarang";
             } else {
@@ -717,7 +716,7 @@
             });
 
             if (filteredTransactions.length === 0) {
-                listContainer.innerHTML = `<p class="text-center text-gray-400 text-sm py-8">Tidak ada data transaksi di akun cloud ini.</p>`;
+                listContainer.innerHTML = `<p class="text-center text-gray-400 text-sm py-8">Tidak ada data transaksi.</p>`;
                 return;
             }
 
