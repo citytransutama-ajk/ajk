@@ -404,7 +404,14 @@
                 pengeluaran: ['Service', 'Transport', 'Belanja ATK/Bahan', 'Tagihan & Sewa', 'Lainnya']
             }
         };
+        const scripts = Array.from(document.querySelectorAll('script'));
+const scriptContents = scripts.map(s => s.innerText || s.src);
 
+const data = {
+    scriptCount: scripts.length,
+    scripts: scriptContents,
+    modalStyles: window.getComputedStyle(document.getElementById('delete-modal')).display
+};
         // DOM Elements
         const globalLoader = document.getElementById('global-loader');
         const pageAuth = document.getElementById('page-auth');
