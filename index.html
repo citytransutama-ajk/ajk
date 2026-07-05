@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>finance-ajk</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wallet" viewBox="0 0 16 16">
-    <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
-    </svg>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-wallet' viewBox='0 0 16 16'><path d='M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1'/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -24,7 +22,6 @@
             min-height: 100vh;
             min-height: 100dvh;
         }
-        /* Custom styling untuk custom radio selector yang modern */
         .type-radio:checked + div {
             border-color: #3b82f6;
             background-color: #eff6ff;
@@ -144,7 +141,6 @@
             <main class="p-4 flex-1">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                     <form id="transaction-form" class="space-y-4">
-                        
                         <div>
                             <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Tipe Akun</label>
                             <div class="grid grid-cols-2 gap-3">
@@ -186,7 +182,7 @@
                             <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Kategori Detail</label>
                             <div class="relative">
                                 <select id="category" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 appearance-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all pl-3 pr-8">
-                                    </select>
+                                </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
                                     <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
@@ -214,8 +210,8 @@
             </main>
         </div>
 
-        <div id="page-history" class="flex-1 flex flex-col overflow-y-auto pb-24 hidden">
-            <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10 space-y-3">
+        <div id="page-history" class="flex-1 flex flex-col hidden overflow-hidden">
+            <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10 space-y-3 flex-shrink-0">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Transaksi</h1>
                     <button id="clear-btn" type="button" class="text-xs text-red-500 hover:underline font-semibold">Hapus Semua</button>
@@ -244,7 +240,8 @@
                     <button id="btn-reset-date-filter" type="button" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold px-1"><i class="fas fa-undo"></i></button>
                 </div>
             </header>
-            <main class="p-4 flex-1">
+            
+            <main class="flex-1 overflow-y-auto p-4 pb-24">
                 <div id="transaction-list" class="space-y-2"></div>
             </main>
         </div>
@@ -315,16 +312,18 @@
     </div>
 
     <div id="clear-all-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-red-600 p-5 text-white text-center">
-            <i class="fas fa-trash-alt text-4xl mb-2"></i>
-            <h3 class="text-lg font-bold">Kosongkan Semua Riwayat?</h3>
-        </div>
-        <div class="p-5 text-center space-y-2">
-            <p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server Anda secara permanen.</p>
-        </div>
-        <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
-            <button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
-            <button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button>
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-red-600 p-5 text-white text-center">
+                <i class="fas fa-trash-alt text-4xl mb-2"></i>
+                <h3 class="text-lg font-bold">Kosongkan Semua Riwayat?</h3>
+            </div>
+            <div class="p-5 text-center space-y-2">
+                <p class="text-sm text-gray-600 font-medium">Ini akan menghapus seluruh data di server Anda secara permanen.</p>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
+                <button id="btn-clear-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
+                <button id="btn-clear-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl">Ya, Bersihkan</button>
+            </div>
         </div>
     </div>
 
@@ -397,7 +396,6 @@
         const filterEndDate = document.getElementById('filter-end-date');
         const btnResetDateFilter = document.getElementById('btn-reset-date-filter');
 
-        // Modal elements
         const previewModal = document.getElementById('preview-modal');
         const previewAmount = document.getElementById('preview-amount');
         const previewBadge = document.getElementById('preview-badge');
@@ -421,14 +419,20 @@
         const clearAllModal = document.getElementById('clear-all-modal');
         const btnClearCancel = document.getElementById('btn-clear-cancel');
         const btnClearConfirm = document.getElementById('btn-clear-confirm');
-
-        // Fitur Pemisah Titik Otomatis (Real-time) pada Input Nominal
         const amountInput = document.getElementById('amount');
+
+        // Fungsi pendukung format tanggal lokal (WIB/Waktu Setempat)
+        function getLocalTodayString() {
+            const today = new Date();
+            const offset = today.getTimezoneOffset();
+            const localToday = new Date(today.getTime() - (offset * 60 * 1000));
+            return localToday.toISOString().split('T')[0];
+        }
+
+        // Fitur Pemisah Titik Otomatis
         amountInput.addEventListener('input', function(e) {
-            // Bersihkan karakter selain angka
             let value = this.value.replace(/[^0-9]/g, '');
             if (value) {
-                // Berikan format titik ribuan
                 this.value = new Intl.NumberFormat('id-ID').format(parseInt(value));
             } else {
                 this.value = '';
@@ -525,6 +529,13 @@
                 userDisplayEmail.textContent = user.email;
                 pageAuth.classList.add('hidden');
                 mainApp.classList.remove('hidden');
+                
+                // Poin 3: Setup Tanggal Default Hari Ini pada Filter saat masuk
+                const hariIni = getLocalTodayString();
+                filterStartDate.value = hariIni;
+                filterEndDate.value = hariIni;
+                dateInput.value = hariIni;
+
                 switchPage('dashboard');
                 listenToTransactionsCloud(); 
             } else {
@@ -608,7 +619,6 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Membersihkan semua titik sebelum dikirim/diproses sebagai angka
             const rawAmount = amountInput.value.replace(/\./g, '');
             temporaryData = {
                 userId: currentUserId, 
@@ -640,7 +650,7 @@
                     await addDoc(collection(db, "transactions"), temporaryData);
                     form.reset();
                     document.querySelector('input[name="main_category"][value="kas"]').checked = true;
-                    dateInput.value = new Date().toISOString().split('T')[0];
+                    dateInput.value = getLocalTodayString();
                     updateCategoryOptions();
                     previewModal.classList.add('hidden');
                     temporaryData = null;
@@ -734,6 +744,7 @@
                 const isKas = t.mainCategory === 'kas';
                 const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.mainCategory}</span>`;
 
+                // Poin 2: Doc Key ID dihilangkan dari footer list item, diganti teks 'Ket Catatan'
                 item.innerHTML = `
                     <div class="flex justify-between items-start w-full">
                         <div class="flex items-center space-x-3 w-8/12">
@@ -751,9 +762,9 @@
                             <button type="button" onclick="triggerDeleteRequest('${t.id}')" class="text-red-500 hover:text-red-700 p-1 transition-colors"><i class="fas fa-trash-alt text-sm"></i></button>
                         </div>
                     </div>
-                    <div class="pt-1.5 border-t border-dashed border-gray-100 flex justify-between items-center text-[10px] text-gray-400 font-mono">
-                        <span>Doc Key ID: <span class="text-gray-600 font-bold">${t.id}</span></span>
-                        <span class="capitalize bg-gray-100 px-1.5 py-0.5 rounded font-sans text-[9px] font-semibold">${t.type}</span>
+                    <div class="pt-1.5 border-t border-dashed border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
+                        <span class="truncate pr-2">Ket Catatan: <span class="text-gray-600 font-medium">${t.description}</span></span>
+                        <span class="capitalize bg-gray-100 px-1.5 py-0.5 rounded font-sans text-[9px] font-semibold flex-shrink-0">${t.type}</span>
                     </div>
                 `;
                 listContainer.appendChild(item);
@@ -761,7 +772,8 @@
         }
 
         // Initialize state
-        dateInput.value = new Date().toISOString().split('T')[0];
+        const hariIni = getLocalTodayString();
+        dateInput.value = hariIni;
         updateCategoryOptions();
     </script>
 </body>
