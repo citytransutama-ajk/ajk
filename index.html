@@ -231,8 +231,8 @@
             </main>
         </div>
 
-        <!-- RIWAYAT TRANSAKSI -->
-        <div id="page-history" class="flex-1 flex flex-col hidden overflow-hidden">
+<!-- RIWAYAT TRANSAKSI -->
+        <div id="page-history" class="flex-1 flex flex-col hidden h-full overflow-hidden">
             <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10 space-y-3 flex-shrink-0">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Transaksi</h1>
@@ -263,8 +263,11 @@
                 </div>
             </header>
             
-            <main class="flex-1 overflow-y-auto smooth-scroll p-4 pb-24">
+            <!-- Perbaikan utama pada padding bottom dan overflow -->
+            <main class="flex-1 overflow-y-auto smooth-scroll p-4 pb-32">
                 <div id="transaction-list" class="space-y-2"></div>
+                <!-- Spacer Pengaman Tambahan agar list terbawah bisa di-scroll melewati footer -->
+                <div class="h-20 w-full flex-shrink-0"></div>
             </main>
         </div>
 
@@ -823,7 +826,6 @@
                             <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs flex-shrink-0"><i class="fas ${icon}"></i></div>
                             <div class="truncate">
                                 <div class="flex items-center space-x-1.5 mb-0.5">
-                                    
                                     ${mainBadge}
                                 </div>
                                 <p class="text-[11px] text-gray-400 font-medium">${t.category} • <span class="text-gray-500">${formatDateDisplay(t.date)}</span></p>
