@@ -6,7 +6,7 @@
     <title>finance-ajk</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='s' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='50%25' stop-color='%238b5cf6'/><stop offset='100%25' stop-color='%23ec4899'/></linearGradient></defs><rect width='24' height='24' rx='6' fill='url(%23s)'/><path d='M8 6.5h6v2H8z' fill='%23fff' opacity='.5'/><path d='M5 8.5h6.5v8H6.5A1.5 1.5 0 0 1 5 15V10a1.5 1.5 0 0 1 1.5-1.5z' fill='%23fff' opacity='.85'/><path d='M11.5 8.5H17A1.5 1.5 0 0 1 18.5 10v5a1.5 1.5 0 0 1-1.5 1.5h-5.5v-8z' fill='%23fff'/><path d='M11 8.5h1v8h-1z' fill='%23000' opacity='.1'/><path d='M14 11h3a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-3v-3z' fill='%23fff'/><circle cx='16.5' cy='12.5' r='1' fill='url(%23s)'/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -250,12 +250,11 @@
             </main>
         </div>
 
-<!-- RIWAYAT TRANSAKSI -->
+        <!-- RIWAYAT TRANSAKSI -->
         <div id="page-history" class="flex-1 flex flex-col hidden h-full overflow-hidden">
             <header class="bg-white p-5 border-b border-gray-200 sticky top-0 z-10 space-y-3 flex-shrink-0">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-history mr-2 text-blue-600"></i>Riwayat Transaksi</h1>
-                    <!--<button id="clear-btn" type="button" class="text-xs text-red-500 hover:underline font-semibold">Hapus Semua</button>-->
                 </div>
                 <div class="flex space-x-2">
                     <select id="filter-main" class="flex-1 p-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-600 focus:outline-none focus:border-blue-500">
@@ -282,10 +281,8 @@
                 </div>
             </header>
             
-            <!-- Perbaikan utama pada padding bottom dan overflow -->
             <main class="flex-1 overflow-y-auto smooth-scroll p-4 pb-24">
                 <div id="transaction-list" class="space-y-2"></div>
-                <!-- Spacer Pengaman Tambahan agar list terbawah bisa di-scroll melewati footer -->
                 <div class="h-20 w-full flex-shrink-0"></div>
             </main>
         </div>
@@ -333,30 +330,28 @@
 
     <!-- MODAL DELETE -->
     <div id="delete-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden">
-            <div class="bg-red-50 px-5 py-4 border-b border-red-100 flex items-center justify-between">
-                <h3 class="text-md font-bold text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Batalkan Transaksi?</h3>
-                <span id="delete-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span>
+        <div class="bg-red-50 px-5 py-4 border-b border-red-100 flex items-center justify-between">
+            <h3 class="text-md font-bold text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i>Batalkan Transaksi?</h3>
+            <span id="delete-badge" class="text-xs px-2.5 py-1 rounded-full font-bold"></span>
+        </div>
+        <div class="p-5 space-y-4">
+            <div class="text-center py-2">
+                <p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p>
+                <p id="delete-amount" class="text-2xl font-extrabold mt-1 text-red-600"></p>
             </div>
-            <div class="p-5 space-y-4">
-                <div class="text-center py-2">
-                    <p class="text-xs text-gray-400 uppercase font-semibold">Nominal</p>
-                    <p id="delete-amount" class="text-2xl font-extrabold mt-1 text-red-600"></p>
-                </div>
-                <hr class="border-gray-100">
-                <div class="grid grid-cols-3 gap-2 text-sm">
-                    <p class="text-gray-400">Ket</p>
-                    <p id="delete-description" class="col-span-2 text-gray-800 font-bold text-right break-words"></p>
-                    <p class="text-gray-400">Akun</p>
-                    <p id="delete-main-cat" class="col-span-2 text-gray-800 font-semibold text-right uppercase text-xs text-blue-600"></p>
-                    <p class="text-gray-400">Kategori</p>
-                    <p id="delete-category" class="col-span-2 text-gray-600 font-medium text-right"></p>
-                </div>
+            <hr class="border-gray-100">
+            <div class="grid grid-cols-3 gap-2 text-sm">
+                <p class="text-gray-400">Ket</p>
+                <p id="delete-description" class="col-span-2 text-gray-800 font-bold text-right break-words"></p>
+                <p class="text-gray-400">Akun</p>
+                <p id="delete-main-cat" class="col-span-2 text-gray-800 font-semibold text-right uppercase text-xs text-blue-600"></p>
+                <p class="text-gray-400">Kategori</p>
+                <p id="delete-category" class="col-span-2 text-gray-600 font-medium text-right"></p>
             </div>
-            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
-                <button id="btn-delete-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
-                <button id="btn-delete-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl flex items-center justify-center">Ya, Batalkan</button>
-            </div>
+        </div>
+        <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 gap-3">
+            <button id="btn-delete-cancel" type="button" class="py-2.5 text-sm font-semibold text-gray-500 bg-white border border-gray-200 rounded-xl">Batal</button>
+            <button id="btn-delete-confirm" type="button" class="py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl flex items-center justify-center">Ya, Batalkan</button>
         </div>
     </div>
 
@@ -380,7 +375,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAnISyhslzBd0kR6v0b0wZfog9XY4szHiI",
@@ -466,7 +461,6 @@
         const btnDeleteCancel = document.getElementById('btn-delete-cancel');
         const btnDeleteConfirm = document.getElementById('btn-delete-confirm');
 
-        const clearBtn = document.getElementById('clear-btn');
         const clearAllModal = document.getElementById('clear-all-modal');
         const btnClearCancel = document.getElementById('btn-clear-cancel');
         const btnClearConfirm = document.getElementById('btn-clear-confirm');
@@ -479,7 +473,6 @@
             return localToday.toISOString().split('T')[0];
         }
 
-        // Realtime nominal format dengan support keyboard mobile yang lebih aman
         amountInput.addEventListener('input', function(e) {
             let value = this.value.replace(/[^0-9]/g, '');
             if (value) {
@@ -543,7 +536,6 @@
             }
         });
 
-        // Terjemahan pesan error firebase agar user-friendly
         function getFriendlyAuthErrorMessage(code) {
             switch(code) {
                 case 'auth/invalid-credential': return 'Email atau kata sandi salah.';
@@ -586,7 +578,7 @@
 
         let unsubscribeFirestore = null;
         onAuthStateChanged(auth, (user) => {
-            globalLoader.classList.add('hidden'); // Sembunyikan splash screen awal setelah status auth didapatkan
+            globalLoader.classList.add('hidden');
             if (user) {
                 currentUserId = user.uid;
                 userDisplayEmail.textContent = user.email;
@@ -657,27 +649,28 @@
             if(!dateString) return "-";
             const parts = dateString.split('-');
             if(parts.length === 3) {
-                // Parse manual agar tidak terkena isu timezone shift pada objek Date
                 const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
                 return dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             }
             return dateString;
         }
 
-        let masukGlobal = 0, keluarGlobal = 0, masukKas = 0, keluarKas = 0, masukOps = 0, keluarOps = 0;
-    
-    transactions.forEach(t => {
-        if (t.status === 'dibatalkan') return; // <-- TAMBAHKAN BARIS INI (Abaikan data batal)
+        function updateDashboard() {
+            let masukGlobal = 0, keluarGlobal = 0, masukKas = 0, keluarKas = 0, masukOps = 0, keluarOps = 0;
+            
+            transactions.forEach(t => {
+                if (t.status === 'dibatalkan') return;
 
-        const isIncome = t.type === 'pemasukan';
-        const value = parseInt(t.amount) || 0;
-        if (isIncome) masukGlobal += value; else keluarGlobal += value;
-        if (t.mainCategory === 'kas') {
-            if (isIncome) masukKas += value; else keluarKas += value;
-        } else if (t.mainCategory === 'operasional') {
-            if (isIncome) masukOps += value; else keluarOps += value;
-        }
-    });
+                const isIncome = t.type === 'pemasukan';
+                const value = parseInt(t.amount) || 0;
+                if (isIncome) masukGlobal += value; else keluarGlobal += value;
+                if (t.mainCategory === 'kas') {
+                    if (isIncome) masukKas += value; else keluarKas += value;
+                } else if (t.mainCategory === 'operasional') {
+                    if (isIncome) masukOps += value; else keluarOps += value;
+                }
+            });
+
             document.getElementById('total-saldo').textContent = formatRupiah(masukGlobal - keluarGlobal);
             document.getElementById('saldo-kas').textContent = formatRupiah(masukKas - keluarKas);
             document.getElementById('masuk-kas').textContent = formatRupiah(masukKas);
@@ -749,27 +742,25 @@
         btnDeleteCancel.addEventListener('click', () => { deleteModal.classList.add('hidden'); transactionIdToDelete = null; });
 
         btnDeleteConfirm.addEventListener('click', async () => {
-    if (transactionIdToDelete) {
-        btnDeleteConfirm.disabled = true;
-        btnDeleteConfirm.textContent = "Membatalkan...";
-        try {
-            // Mengubah dari deleteDoc menjadi updateDoc status: "dibatalkan"
-            const transactionRef = doc(db, "transactions", transactionIdToDelete);
-            await updateDoc(transactionRef, {
-                status: "dibatalkan"
-            });
-            deleteModal.classList.add('hidden');
-            transactionIdToDelete = null;
-        } catch (e) {
-            alert("Gagal membatalkan transaksi: " + e.message);
-        } finally {
-            btnDeleteConfirm.disabled = false;
-            btnDeleteConfirm.textContent = "Ya, Batalkan";
-        }
-    }
-});
+            if (transactionIdToDelete) {
+                btnDeleteConfirm.disabled = true;
+                btnDeleteConfirm.textContent = "Membatalkan...";
+                try {
+                    const transactionRef = doc(db, "transactions", transactionIdToDelete);
+                    await updateDoc(transactionRef, {
+                        status: "dibatalkan"
+                    });
+                    deleteModal.classList.add('hidden');
+                    transactionIdToDelete = null;
+                } catch (e) {
+                    alert("Gagal membatalkan transaksi: " + e.message);
+                } finally {
+                    btnDeleteConfirm.disabled = false;
+                    btnDeleteConfirm.textContent = "Ya, Batalkan";
+                }
+            }
+        });
 
-        clearBtn.addEventListener('click', () => { clearAllModal.classList.remove('hidden'); });
         btnClearCancel.addEventListener('click', () => { clearAllModal.classList.add('hidden'); });
         btnClearConfirm.addEventListener('click', async () => {
             if(!currentUserId) return;
@@ -792,7 +783,6 @@
             }
         });
 
-        // Reset filter tanggal ke hari ini
         btnResetDate.addEventListener('click', () => {
             const hariIni = getLocalTodayString();
             filterStartDate.value = hariIni;
@@ -839,51 +829,49 @@
             });
 
             sorted.forEach((t) => {
-    const item = document.createElement('div');
-    const isCancelled = t.status === 'dibatalkan'; // Cek status pembatalan
-    
-    // Jika dibatalkan, beri background abu-abu dan efek opacity/coret
-    item.className = `p-3.5 rounded-xl shadow-sm flex flex-col space-y-2 border transition-all ${
-        isCancelled ? 'bg-gray-50 border-gray-200 opacity-60 line-through select-none' : 'bg-white border-gray-100'
-    }`;
-    
-    const isIncome = t.type === 'pemasukan';
-    const icon = isCancelled ? 'fa-ban text-gray-400' : (isIncome ? 'fa-arrow-down-long text-green-500' : 'fa-arrow-up-long text-red-500');
-    const isKas = t.mainCategory === 'kas';
-    const labelBadge = isKas ? 'kas jalan' : t.mainCategory;
-    const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${labelBadge}</span>`;
+                const item = document.createElement('div');
+                const isCancelled = t.status === 'dibatalkan';
+                
+                item.className = `p-3.5 rounded-xl shadow-sm flex flex-col space-y-2 border transition-all ${
+                    isCancelled ? 'bg-gray-50 border-gray-200 opacity-60 line-through select-none' : 'bg-white border-gray-100'
+                }`;
+                
+                const isIncome = t.type === 'pemasukan';
+                const icon = isCancelled ? 'fa-ban text-gray-400' : (isIncome ? 'fa-arrow-down-long text-green-500' : 'fa-arrow-up-long text-red-500');
+                const isKas = t.mainCategory === 'kas';
+                const labelBadge = isKas ? 'kas jalan' : t.mainCategory;
+                const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${labelBadge}</span>`;
 
-    // Sembunyikan tombol 'X' jika transaksi sudah dibatalkan
-    const actionButton = isCancelled 
-        ? `<span class="text-[10px] text-red-500 font-bold tracking-wider uppercase border border-red-200 px-1.5 py-0.5 rounded bg-red-50 line-none inline-block">Batal</span>` 
-        : `<button type="button" onclick="triggerDeleteRequest('${t.id}')" class="text-gray-400 hover:text-red-500 p-1 transition-colors" title="Batalkan Transaksi"><i class="fas fa-times-circle text-base"></i></button>`;
+                const actionButton = isCancelled 
+                    ? `<span class="text-[10px] text-red-500 font-bold tracking-wider uppercase border border-red-200 px-1.5 py-0.5 rounded bg-red-50 line-none inline-block">Batal</span>` 
+                    : `<button type="button" onclick="triggerDeleteRequest('${t.id}')" class="text-gray-400 hover:text-red-500 p-1 transition-colors" title="Batalkan Transaksi"><i class="fas fa-times-circle text-base"></i></button>`;
 
-    const textAmountColor = isCancelled ? 'text-gray-400' : (isIncome ? 'text-green-600' : 'text-red-600');
+                const textAmountColor = isCancelled ? 'text-gray-400' : (isIncome ? 'text-green-600' : 'text-red-600');
 
-    item.innerHTML = `
-        <div class="flex justify-between items-start w-full">
-            <div class="flex items-center space-x-3 w-8/12">
-                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs flex-shrink-0"><i class="fas ${icon}"></i></div>
-                <div class="truncate">
-                    <div class="flex items-center space-x-1.5 mb-0.5">
-                        <p class="text-sm font-bold text-gray-800 truncate">${t.description}</p>
-                        ${mainBadge}
+                item.innerHTML = `
+                    <div class="flex justify-between items-start w-full">
+                        <div class="flex items-center space-x-3 w-8/12">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs flex-shrink-0"><i class="fas ${icon}"></i></div>
+                            <div class="truncate">
+                                <div class="flex items-center space-x-1.5 mb-0.5">
+                                    <p class="text-sm font-bold text-gray-800 truncate">${t.description}</p>
+                                    ${mainBadge}
+                                </div>
+                                <p class="text-[11px] text-gray-400 font-medium">${t.category} • <span class="text-gray-500">${formatDateDisplay(t.date)}</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 w-4/12 justify-end">
+                            <p class="text-sm font-bold ${textAmountColor} text-right">${isIncome ? '+' : '-'} ${formatRupiah(t.amount)}</p>
+                            ${actionButton}
+                        </div>
                     </div>
-                    <p class="text-[11px] text-gray-400 font-medium">${t.category} • <span class="text-gray-500">${formatDateDisplay(t.date)}</span></p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2 w-4/12 justify-end">
-                <p class="text-sm font-bold ${textAmountColor} text-right">${isIncome ? '+' : '-'} ${formatRupiah(t.amount)}</p>
-                ${actionButton}
-            </div>
-        </div>
-        <div class="pt-1.5 border-t border-dashed border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
-            <span class="truncate pr-2">Keterangan: <span class="text-gray-600 font-medium">${t.description}</span></span>
-            <span class="capitalize bg-gray-100 px-1.5 py-0.5 rounded font-sans text-[9px] font-semibold flex-shrink-0">${t.type}</span>
-        </div>
-    `;
-    listContainer.appendChild(item);
-});
+                    <div class="pt-1.5 border-t border-dashed border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
+                        <span class="truncate pr-2">Keterangan: <span class="text-gray-600 font-medium">${t.description}</span></span>
+                        <span class="capitalize bg-gray-100 px-1.5 py-0.5 rounded font-sans text-[9px] font-semibold flex-shrink-0">${t.type}</span>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
         }
 
         // Initialize state
