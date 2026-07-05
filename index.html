@@ -837,7 +837,7 @@
                 const icon = isIncome ? 'fa-arrow-down-long text-green-500' : 'fa-arrow-up-long text-red-500';
                 const isKas = t.mainCategory === 'kas';
                 const labelBadge = isKas ? 'kas jalan' : t.mainCategory;
-                const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${t.mainCategory}</span>`;
+                const mainBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${isKas ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}">${labelBadge}</span>`;
 
                 item.innerHTML = `
                     <div class="flex justify-between items-start w-full">
