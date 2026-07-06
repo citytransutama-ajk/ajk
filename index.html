@@ -834,7 +834,7 @@
                 const isCancelled = t.status === 'dibatalkan';
                 
                 item.className = `p-3.5 rounded-xl shadow-sm flex flex-col space-y-2 border transition-all ${
-                    isCancelled ? 'bg-gray-50 border-gray-200 opacity-60 line-through select-none' : 'bg-white border-gray-100'
+                    isCancelled ? 'bg-gray-50 border-gray-200 opacity-60 select-none' : 'bg-white border-gray-100'
                 }`;
                 
                 const isIncome = t.type === 'pemasukan';
@@ -855,7 +855,6 @@
                             <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs flex-shrink-0"><i class="fas ${icon}"></i></div>
                             <div class="truncate">
                                 <div class="flex items-center space-x-1.5 mb-0.5">
-                                    
                                     ${mainBadge}
                                 </div>
                                 <p class="text-[11px] text-gray-400 font-medium">${t.category} • <span class="text-gray-500">${formatDateDisplay(t.date)}</span></p>
